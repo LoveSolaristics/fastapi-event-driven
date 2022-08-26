@@ -40,6 +40,7 @@ db:  ##@Database Create database with docker-compose
 
 lint:  ##@Code Check code with pylint
 	poetry run python3 -m pflake8 $(CODE)
+	poetry run python3 -m mypy $(CODE)
 
 format:  ##@Code Reformat code with isort and black
 	poetry run python3 -m isort $(CODE)
