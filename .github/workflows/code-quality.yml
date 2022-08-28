@@ -2,14 +2,14 @@ name: Checks
 on: [pull_request]
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     name: Checks
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
       with:
-        python-version: 3.10^
+        python-version: 3.11
     - run: pip install --upgrade pip
-    - run: pip install mypy==v0.902
-    - run: mypy --strict $(git ls-files '*.py')
+    - run: make setup
+    - run: make lint

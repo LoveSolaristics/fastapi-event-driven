@@ -35,6 +35,10 @@ help: ##@Help Show this help
 	@echo -e "Usage: make [target] ...\n"
 	@perl -e '$(HELP_FUN)' $(MAKEFILE_LIST)
 
+setup:
+	python3 -m pip install poetry
+	poetry install
+
 db:  ##@Database Create database with docker-compose
 	docker run -d --name redis -p 6379:6379 dockerfiles/redis
 
@@ -45,3 +49,16 @@ lint:  ##@Code Check code with pylint
 format:  ##@Code Reformat code with isort and black
 	poetry run python3 -m isort $(CODE)
 	poetry run python3 -m black $(CODE)
+
+clean-pyc:  ##@Clean .pyc files
+	find . -name '*.pyc' -exec rm -f {} +
+	find . -name '*.pyo' -exec rm -f {} +
+	find . -name '*~' -exec rm -f {} +
+	find . -name '__pycache__' -exec rm -fr {} +
+
+clean-test:  ##@Clean coverage reports
+	rm -f .coverage
+	rm -f .coverage.*
+
+clean:  ##@Clean all
+	clean-pyc clean-test
