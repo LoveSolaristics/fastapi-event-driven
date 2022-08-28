@@ -35,7 +35,7 @@ help: ##@Help Show this help
 	@echo -e "Usage: make [target] ...\n"
 	@perl -e '$(HELP_FUN)' $(MAKEFILE_LIST)
 
-setup:
+setup:  ##@Setup Install project requirements
 	python3 -m pip install poetry
 	poetry install
 
@@ -60,5 +60,8 @@ clean-test:  ##@Clean coverage reports
 	rm -f .coverage
 	rm -f .coverage.*
 
-clean:  ##@Clean all
-	clean-pyc clean-test
+clean-mypy:  ##@Clean mypy cache
+	rm -r .mypy_cache
+
+clean:  ##@Clean Clean all temp, report or cache files
+	make clean-pyc && make clean-test && make clean-mypy
