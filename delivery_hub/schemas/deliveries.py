@@ -1,4 +1,4 @@
-from pydantic import BaseModel, confloat, Extra
+from pydantic import BaseModel, Extra, confloat
 
 
 class CreateDeliveryRequest(BaseModel):

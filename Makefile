@@ -35,12 +35,21 @@ help: ##@Help Show this help
 	@echo -e "Usage: make [target] ...\n"
 	@perl -e '$(HELP_FUN)' $(MAKEFILE_LIST)
 
-setup:  ##@Setup Install project requirements
+install:  ##@Setup Install project requirements
 	python3 -m pip install poetry
 	poetry install
 
+env:  ##@Environment Create .env file with variables
+	@$(eval SHELL:=/bin/bash)
+	@cp .env.sample .env
+	@echo "REDIS_PASSWORD=$$(openssl rand -hex 32)" >> .env
+
 db:  ##@Database Create database with docker-compose
-	docker run -d --name redis -p 6379:6379 dockerfiles/redis
+	docker-compose -f docker-compose.yaml up -d --remove-orphans
+
+
+run:  ##@Application Run application
+	poetry run python3 -m $(APPLICATION_NAME)
 
 lint:  ##@Code Check code with pylint
 	poetry run python3 -m pflake8 $(CODE)

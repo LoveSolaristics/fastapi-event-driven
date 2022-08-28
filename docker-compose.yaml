@@ -1,21 +1,16 @@
 version: "3.2"
 services:
-
- redis:
+  redis:
+    container_name: 'delivery_hub_redis'
     image: "redis:alpine"
-
-    command: redis-server --requirepass sOmE_sEcUrE_pAsS
-
+    command: redis-server --requirepass ${REDIS_PASSWORD:-"HackMe"}
     ports:
-     - "6379:6379"
-
+     - "${REDIS_PORT:-6379}:${REDIS_PORT:-6379}"
     volumes:
      - $PWD/redis-data:/var/lib/redis
       - ./redis.conf
-
     environment:
      - REDIS_REPLICATION_MODE=master
-
     networks:
       node_net:
         ipv4_address: 172.28.1.4
