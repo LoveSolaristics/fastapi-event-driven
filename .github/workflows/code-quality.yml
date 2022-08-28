@@ -23,7 +23,9 @@ jobs:
         image: redis
         ports:
           - 6379:6379
-        options: --entrypoint redis-server --requirepass "hackme"
+        options: >-
+          --entrypoint redis-server
+          --requirepass "hackme"
     env:
       REDIS_PASSWORD: "hackme"
       REDIS_PORT: 6379
