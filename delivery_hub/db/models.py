@@ -1,7 +1,7 @@
 from redis_om import HashModel
 
 from delivery_hub.db.connection import redis
-from delivery_hub.event_type import EventType
+from delivery_hub.enums import EventType
 
 
 class Delivery(HashModel):  # type: ignore[no-any-unimported]

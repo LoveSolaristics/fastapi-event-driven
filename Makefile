@@ -53,7 +53,7 @@ run:  ##@Application Run application
 
 lint:  ##@Code Check code with pylint
 	poetry run python3 -m pflake8 $(CODE)
-	poetry run python3 -m mypy $(CODE)
+	poetry run python3 -m mypy $(APPLICATION_NAME)
 
 format:  ##@Code Reformat code with isort and black
 	poetry run python3 -m isort $(CODE)
@@ -74,3 +74,6 @@ clean-mypy:  ##@Clean mypy cache
 
 clean:  ##@Clean Clean all temp, report or cache files
 	make clean-pyc && make clean-test && make clean-mypy
+
+test:  ##@Test Run tests
+	make db && $(TEST)

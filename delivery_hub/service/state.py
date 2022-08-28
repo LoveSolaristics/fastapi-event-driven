@@ -2,7 +2,7 @@ from json import dumps, loads
 
 from delivery_hub.db.connection import redis
 from delivery_hub.db.models import Event
-from delivery_hub.utils.consumers import CONSUMERS
+from delivery_hub.service.consumers import CONSUMERS
 
 
 def build_state(pk: str) -> dict[str, str | int]:

@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from delivery_hub.event_type import EventType
+from delivery_hub.enums import EventType
 
 
 class Event(BaseModel):

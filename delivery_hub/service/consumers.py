@@ -4,7 +4,7 @@ from typing import Callable
 from fastapi import HTTPException
 
 from delivery_hub.db.models import Event
-from delivery_hub.event_type import EventType
+from delivery_hub.enums import DeliveryStatus, EventType
 
 
 def create_delivery(
@@ -12,14 +12,19 @@ def create_delivery(
     event: Event,
 ) -> dict[str, str | int]:
     data: dict[str, str | int] = loads(event.data)
-    return {"id": event.delivery_id, "budget": int(data["budget"]), "notes": data["notes"], "status": "ready"}
+    return {
+        "id": event.delivery_id,
+        "budget": int(data["budget"]),
+        "notes": data["notes"],
+        "status": DeliveryStatus.READY,
+    }
 
 
 def start_delivery(state: dict[str, str | int], _: Event) -> dict[str, str | int]:
     if state["status"] != "ready":
         raise HTTPException(status_code=400, detail="Delivery already started")
 
-    return state | {"status": "active"}
+    return state | {"status": DeliveryStatus.ACTIVE}
 
 
 def pickup_products(
@@ -37,7 +42,7 @@ def pickup_products(
         "budget": new_budget,
         "purchase_price": int(data["purchase_price"]),
         "quantity": int(data["quantity"]),
-        "status": "collected",
+        "status": DeliveryStatus.COLLECTED,
     }
 
 
@@ -60,7 +65,7 @@ def deliver_products(
         "budget": new_budget,
         "sell_price": int(data["sell_price"]),
         "quantity": new_quantity,
-        "status": "completed",
+        "status": DeliveryStatus.COMPLETED,
     }
 
 

@@ -5,8 +5,8 @@ from fastapi import APIRouter, Body, Request
 from delivery_hub.db.connection import redis
 from delivery_hub.db.models import Event
 from delivery_hub.schemas import Event as EventSchema
-from delivery_hub.utils.consumers import CONSUMERS
-from delivery_hub.utils.state import get_state
+from delivery_hub.service.consumers import CONSUMERS
+from delivery_hub.service.state import get_state
 
 
 api_router = APIRouter(

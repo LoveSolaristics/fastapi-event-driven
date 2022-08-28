@@ -1,13 +1,14 @@
 from json import dumps
 
 from fastapi import APIRouter, Body, Request
+from starlette import status
 
 from delivery_hub.db.connection import redis
 from delivery_hub.db.models import Delivery, Event
-from delivery_hub.event_type import EventType
+from delivery_hub.enums import EventType
 from delivery_hub.schemas import CreateDeliveryRequest
-from delivery_hub.utils.consumers import CONSUMERS
-from delivery_hub.utils.state import get_state
+from delivery_hub.service.consumers import CONSUMERS
+from delivery_hub.service.state import get_state
 
 
 api_router = APIRouter(
@@ -16,7 +17,10 @@ api_router = APIRouter(
 )
 
 
-@api_router.post("/create")
+@api_router.post(
+    "",
+    status_code=status.HTTP_201_CREATED,
+)
 async def create(
     _: Request,
     model: CreateDeliveryRequest = Body(...),
@@ -28,8 +32,8 @@ async def create(
     return state
 
 
-@api_router.get("/{pk}/status")
+@api_router.get("/{delivery_id}/status")
 async def get_delivery_status(
-    pk: str,
+    delivery_id: str,
 ) -> dict[str, str | int]:
-    return get_state(pk)
+    return get_state(delivery_id)
