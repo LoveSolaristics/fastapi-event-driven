@@ -30,8 +30,8 @@ jobs:
           --health-retries 5
           --entrypoint redis-server
     env:
-      REDIS_PASSWORD: 'hackme'
-      REDIS_PORT: ${{ jobs.services.redis.ports[6379] }}
+#      REDIS_PASSWORD: 'hackme'
+      REDIS_PORT: 6379
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v4
