@@ -1,11 +1,12 @@
 from json import dumps
 
-from db.connection import redis
-from db.models import Event
 from fastapi import APIRouter, Body, Request
-from schemas import Event as EventSchema
-from utils.consumers import CONSUMERS
-from utils.state import get_state
+
+from delivery_hub.db.connection import redis
+from delivery_hub.db.models import Event
+from delivery_hub.schemas import Event as EventSchema
+from delivery_hub.utils.consumers import CONSUMERS
+from delivery_hub.utils.state import get_state
 
 
 api_router = APIRouter(
@@ -20,9 +21,9 @@ api_router = APIRouter(
 async def dispatch(
     _: Request,
     event: EventSchema = Body(...),
-):
-    state = get_state(event.delivery_id)
-    event = Event(**event.dict()).save()
-    new_state = CONSUMERS[event.type](state, event)
-    redis.set(f"delivery:{event.delivery_id}", dumps(new_state))
+) -> dict[str, str | int]:
+    state: dict[str, str | int] = get_state(event.delivery_id)
+    new_event: Event = Event(**event.dict()).save()
+    new_state: dict[str, str | int] = CONSUMERS[new_event.type](state, new_event)
+    redis.set(f"delivery:{new_event.delivery_id}", dumps(new_state))
     return new_state

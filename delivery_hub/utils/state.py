@@ -1,25 +1,26 @@
 from json import dumps, loads
 
-from db.connection import redis
-from db.models import Event
-from utils.consumers import CONSUMERS
+from delivery_hub.db.connection import redis
+from delivery_hub.db.models import Event
+from delivery_hub.utils.consumers import CONSUMERS
 
 
-def build_state(pk: str):
+def build_state(pk: str) -> dict[str, str | int]:
     events = Event.find(Event.delivery_id == pk).all()
-    state = {}
+    state: dict[str, str | int] = {}
 
     for event in events:
         state = CONSUMERS[event.type](state, event)
     return state
 
 
-def get_state(pk: str) -> "str":
-    state = redis.get(f"delivery:{pk}")
+def get_state(pk: str) -> dict[str, str | int]:
+    state: str | None = redis.get(f"delivery:{pk}")
 
     if state is not None:
-        return loads(state)
+        unpacked_state: dict[str, str | int] = loads(state)
+        return unpacked_state
 
-    state = build_state(pk)
-    redis.set(f"delivery:{pk}", dumps(state))
-    return state
+    built_state: dict[str, str | int] = build_state(pk)
+    redis.set(f"delivery:{pk}", dumps(built_state))
+    return built_state

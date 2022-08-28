@@ -27,15 +27,6 @@ build-backend = "poetry.core.masonry.api"
 [tool.flake8]
 max-line-length = 120
 
-[tool.mypy]
-disallow_untyped_defs = true
-disallow_any_unimported = true
-no_implicit_optional = true
-check_untyped_defs = true
-warn_return_any = true
-warn_unused_ignores = true
-show_error_codes = true
-
 [tool.black]
 line-length = 120
 target-version = ['py310']

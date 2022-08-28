@@ -1,5 +1,6 @@
-from event_type import EventType
 from pydantic import BaseModel
+
+from delivery_hub.event_type import EventType
 
 
 class Event(BaseModel):

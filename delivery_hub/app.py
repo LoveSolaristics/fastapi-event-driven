@@ -1,6 +1,7 @@
-from endpoints import routers_lists_with_prefixes
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+from delivery_hub.endpoints import routers_lists_with_prefixes
 
 
 def bind_routes(

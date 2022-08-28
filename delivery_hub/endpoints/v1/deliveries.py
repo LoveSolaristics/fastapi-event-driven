@@ -1,12 +1,13 @@
 from json import dumps
 
-from db.connection import redis
-from db.models import Delivery, Event
-from event_type import EventType
 from fastapi import APIRouter, Body, Request
-from schemas import CreateDeliveryRequest
-from utils.consumers import CONSUMERS
-from utils.state import get_state
+
+from delivery_hub.db.connection import redis
+from delivery_hub.db.models import Delivery, Event
+from delivery_hub.event_type import EventType
+from delivery_hub.schemas import CreateDeliveryRequest
+from delivery_hub.utils.consumers import CONSUMERS
+from delivery_hub.utils.state import get_state
 
 
 api_router = APIRouter(
@@ -19,10 +20,10 @@ api_router = APIRouter(
 async def create(
     _: Request,
     model: CreateDeliveryRequest = Body(...),
-):
-    delivery = Delivery(budget=model.budget, notes=model.notes).save()
-    event = Event(delivery_id=delivery.pk, type=EventType.CREATE_DELIVERY, data=model.json()).save()
-    state = CONSUMERS[event.type]({}, event)
+) -> dict[str, str | int]:
+    delivery: Delivery = Delivery(budget=model.budget, notes=model.notes).save()
+    event: Event = Event(delivery_id=delivery.pk, type=EventType.CREATE_DELIVERY, data=model.json()).save()
+    state: dict[str, str | int] = CONSUMERS[event.type]({}, event)
     redis.set(f"delivery:{delivery.pk}", dumps(state))
     return state
 
@@ -30,5 +31,5 @@ async def create(
 @api_router.get("/{pk}/status")
 async def get_delivery_status(
     pk: str,
-):
+) -> dict[str, str | int]:
     return get_state(pk)
