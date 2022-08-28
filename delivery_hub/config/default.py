@@ -16,7 +16,7 @@ class DefaultSettings(BaseSettings):
     APP_PORT: int = int(environ.get("APP_PORT", 8080))
 
     REDIS_PORT: int = int(environ.get("REDIS_PORT", 6379))
-    REDIS_PASSWORD: str = environ.get("REDIS_PASSWORD", "HackMe")
+    REDIS_PASSWORD: str | None = environ.get("REDIS_PASSWORD", None)
 
     class Config:
         env_file = ".env"
