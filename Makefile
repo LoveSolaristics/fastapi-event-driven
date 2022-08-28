@@ -76,4 +76,4 @@ clean:  ##@Clean Clean all temp, report or cache files
 	make clean-pyc && make clean-test && make clean-mypy
 
 test:  ##@Test Run tests
-	make db && $(TEST)
+	$(TEST)
