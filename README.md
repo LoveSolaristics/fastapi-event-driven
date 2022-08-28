@@ -34,3 +34,10 @@ List of possible commands:
 ```shell
 make help
 ```
+
+## TODO
+
+1. Create tests for handlers and add Github Workflow for them;
+2. Add doc-strings for functions (and check them with linters);
+3. Add more linters (maybe add more flake8 plugins like `flake8-cognitive-complexity` etc.)
+4. Make async redis connection with `asyncio-redis`.
