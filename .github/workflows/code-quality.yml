@@ -1,4 +1,4 @@
-name: Chekds
+name: Checks
 on: [pull_request]
 
 jobs:
@@ -19,16 +19,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Unit and integration tests
     services:
-      image: redis
-      options: >-
-        --health-cmd "redis-cli ping"
-        --health-interval 10s
-        --health-timeout 5s
-        --health-retries 5
-      ports:
-        - 6379:6379
-    env:
-      REDIS_PORT: 6379
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+        options: --entrypoint redis-server
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v4
