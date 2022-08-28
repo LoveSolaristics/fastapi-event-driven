@@ -23,7 +23,8 @@ async def dispatch(
     event: EventSchema = Body(...),
 ) -> dict[str, str | int]:
     state: dict[str, str | int] = get_state(event.delivery_id)
-    new_event: Event = Event(**event.dict()).save()
+    print("EVENT:", event)
+    new_event: Event = Event(type=event.event_type, data=dumps(event.data), delivery_id=event.delivery_id).save()
     new_state: dict[str, str | int] = CONSUMERS[new_event.type](state, new_event)
     redis.set(f"delivery:{new_event.delivery_id}", dumps(new_state))
     return new_state

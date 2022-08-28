@@ -11,5 +11,6 @@ jobs:
       with:
         python-version: '3.10'
     - run: pip install --upgrade pip
-    - run: make setup
+    - run: make install
+    - run: make env
     - run: make lint

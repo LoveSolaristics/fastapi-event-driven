@@ -35,12 +35,21 @@ help: ##@Help Show this help
 	@echo -e "Usage: make [target] ...\n"
 	@perl -e '$(HELP_FUN)' $(MAKEFILE_LIST)
 
-setup:
+install:  ##@Setup Install project requirements
 	python3 -m pip install poetry
 	poetry install
 
+env:  ##@Environment Create .env file with variables
+	@$(eval SHELL:=/bin/bash)
+	@cp .env.sample .env
+	@echo "REDIS_PASSWORD=$$(openssl rand -hex 32)" >> .env
+
 db:  ##@Database Create database with docker-compose
-	docker run -d --name redis -p 6379:6379 dockerfiles/redis
+	docker-compose -f docker-compose.yaml up -d --remove-orphans
+
+
+run:  ##@Application Run application
+	poetry run python3 -m $(APPLICATION_NAME)
 
 lint:  ##@Code Check code with pylint
 	poetry run python3 -m pflake8 $(CODE)
@@ -60,5 +69,8 @@ clean-test:  ##@Clean coverage reports
 	rm -f .coverage
 	rm -f .coverage.*
 
-clean:  ##@Clean all
-	clean-pyc clean-test
+clean-mypy:  ##@Clean mypy cache
+	rm -r .mypy_cache
+
+clean:  ##@Clean Clean all temp, report or cache files
+	make clean-pyc && make clean-test && make clean-mypy
