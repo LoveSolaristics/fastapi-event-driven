@@ -17,11 +17,45 @@ isort = "^5.10.1"
 mypy = "^0.971"
 black = "^22.6.0"
 pyproject-flake8 = "^0.0.1-alpha.5"
+httpx = "^0.23.0"
+pytest = "^7.1.2"
+pytest-asyncio = "^0.19.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+# PYTEST
+
+[tool.pytest]
+python_files = "test_*.py"
+python_classes = ["*Test", "Test*"]
+python_functions = "test_*"
+testpaths = "tests/"
+
+[tool.coverage.report]
+exclude_lines = [
+    "# pragma: no cover",
+    "def __repr__",
+    "def __str__",
+    "def __unicode__",
+]
+show_missing = true
+skip_empty = true
+omit = [
+  "*/__init__.py",
+  "delivery_hub/db/migrator/env.py",
+]
+
+[tool.coverage.html]
+directory = "pytest-cov-report"
+
+[tool.coverage.run]
+branch = true
+concurrency = ['thread', 'greenlet']
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
 
 # LINTERS
 
