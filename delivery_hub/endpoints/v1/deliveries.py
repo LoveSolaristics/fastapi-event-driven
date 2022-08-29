@@ -6,7 +6,7 @@ from starlette import status
 from delivery_hub.db.connection import redis
 from delivery_hub.db.models import Delivery, Event
 from delivery_hub.enums import EventType
-from delivery_hub.schemas import CreateDeliveryRequest
+from delivery_hub.schemas import CreateDeliveryRequest, GetDeliveryStatus
 from delivery_hub.service.consumers import CONSUMERS
 from delivery_hub.service.state import get_state
 
@@ -32,7 +32,10 @@ async def create(
     return state
 
 
-@api_router.get("/{delivery_id}/status")
+@api_router.get(
+    "/{delivery_id}/status",
+    response_model=GetDeliveryStatus,
+)
 async def get_delivery_status(
     delivery_id: str,
 ) -> dict[str, str | int]:

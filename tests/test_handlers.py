@@ -20,7 +20,12 @@ class TestCreateDelivery:
         ),
     )
     async def test_create_delivery(
-        self, client, budget: int | None, notes: str | None, expected_status: int, redis_connection: Redis
+        self,
+        client,
+        redis_connection,
+        budget: int | None,
+        notes: str | None,
+        expected_status: int,
     ):
         response = await client.post(
             "/api/v1/deliveries",
@@ -34,3 +39,18 @@ class TestCreateDelivery:
             delivery_id = response.json()["id"]
             delivery_from_base = loads(redis_connection.get(f"delivery:{delivery_id}"))
             assert delivery_from_base["status"] == DeliveryStatus.READY
+            assert delivery_from_base["budget"] == budget
+            assert delivery_from_base["notes"] == notes
+
+
+class TestGetDeliveryStatus:
+    async def test_get_ready_delivery(self, client, delivery):
+        print("DELIVERY:", delivery)
+        response = await client.get(url=f"/api/v1/deliveries/{delivery.pk}/status")
+        print("1")
+        assert response.status_code == status.HTTP_200_OK, response.json()
+        print("2")
+        delivery_from_api = response.json()
+        print("DELIVERY FROM API:", delivery_from_api)
+        assert delivery_from_api["id"] == delivery.pk
+        assert delivery_from_api["status"] == DeliveryStatus.READY

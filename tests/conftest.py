@@ -8,7 +8,9 @@ from delivery_hub.app import app
 from delivery_hub.db.connection import redis
 
 
-pytest_plugins: list[str] = []
+pytest_plugins: list[str] = [
+    "fixtures.delivery",
+]
 
 
 @pytest.fixture(scope="session")
